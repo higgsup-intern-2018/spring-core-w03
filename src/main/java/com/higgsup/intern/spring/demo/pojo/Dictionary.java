@@ -7,7 +7,6 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 public class Dictionary {
-    File file = new File("DICT.DAT");
 
     private Map<String, String> dictionary = new TreeMap<>();
 
@@ -19,7 +18,11 @@ public class Dictionary {
         this.dictionary = dictionary;
     }
 
+    File file = new File("DICT.DAT");
 
+    /**
+     * Get the Dictionary from .dat file
+     */
     public void getDictionaryFromFile() {
         try {
             File file = new File("DICT.DAT");
@@ -29,70 +32,84 @@ public class Dictionary {
             List<String> list = bufferedReader.lines().collect(Collectors.toList());
 
             for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).equals("")) {
-                    continue;
-                }
+                if (list.get(i).equals("")) continue;
                 String[] splits = list.get(i).split(":");
                 String word = splits[0];
                 String meanings = splits[1].replaceFirst(" ", "");
                 dictionary.put(word, meanings);
             }
             bufferedReader.close();
-
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
+    /**
+     * Save a word and its meanings
+     */
     public void save() {
-        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file, true))) {
-            if (dictionary.isEmpty() == true) {
-                System.out.println("Nothing to save in Input!");
-            } else {
-                for (String key : dictionary.keySet()) {
-                    bufferedWriter.write(key + ": " + dictionary.get(key));
-                    bufferedWriter.newLine();
-                }
-            }
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
 
+            for (String key : dictionary.keySet()) {
+                bufferedWriter.write(key + ": " + dictionary.get(key));
+                bufferedWriter.newLine();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
+    /**
+     * Add meanings of the existing word
+     */
     public void add(String word, String meanings) {
         for (String key : dictionary.keySet()) {
-            if (key.equals(word)) {
-                if (dictionary.get(key).equals(meanings))
-                    System.out.println("Word and meanings already exists!");
-            } else {
-                dictionary.get(key).concat(": ").concat(meanings);
-            }
-            if (!key.equals(word)) {
-                dictionary.put(word, meanings);
+            if (key.equals(word)&& !dictionary.get(key).equals(meanings)) {
+                dictionary.replace(word, dictionary.get(key) + "; " + meanings);
             }
         }
-    }
-
-    public void lookup(String word) {
-        if (dictionary.isEmpty() == true) {
-            System.out.println(" ");
-        } else {
-            System.out.println(dictionary.get(word));
-        }
-    }
-
-    public void delete(String word) {
         if (!dictionary.containsKey(word)) {
-            System.out.println("Not found.");
-        } else {
-            dictionary.remove(word);
-            System.out.println(word + "deleted.");
+            dictionary.put(word, meanings);
         }
+    }
+
+    /**
+     * Look up a word in the dictionary
+     */
+    public void lookup(String word) {
+        if (dictionary.containsKey(word)) {
+            System.out.println(dictionary.get(word));
+        } else {
+            System.out.println("Not found.");
+        }
+    }
+
+    /**
+     * Delete a word in the dictionary
+     */
+    public void delete(String word) {
+        if (dictionary.containsKey(word)) {
+            dictionary.remove(word);
+            System.out.println(word + " deleted.");
+        } else {
+            System.out.println("Not found.");
+        }
+    }
+
+    /**
+     * input instruction
+     */
+    public void instruct() {
+        System.out.println("----------DICTIONARY---------");
+        System.out.println("> add <word>: <meanings>    |");
+        System.out.println("> lookup <word>             |");
+        System.out.println("> delete <word>             |");
+        System.out.println("> save                      |");
+        System.out.println("> quit                      |");
+        System.out.println("-----------------------------");
+
     }
 }
