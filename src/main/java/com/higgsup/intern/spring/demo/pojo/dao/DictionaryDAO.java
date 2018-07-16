@@ -30,7 +30,7 @@ public class DictionaryDAO {
         this.dict = dict;
     }
 
-    File file = new File("DICT.DAT");
+    File file = new File("src/DICT.DAT");
 
     /**
      * Get the Dictionary from .dat file
