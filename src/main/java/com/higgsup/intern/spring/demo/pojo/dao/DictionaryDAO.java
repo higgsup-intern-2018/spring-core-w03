@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,11 +41,11 @@ public class DictionaryDAO {
             BufferedReader bufferedReader = new BufferedReader
                     (new InputStreamReader(new FileInputStream(file)));
 
-            List<String> list = bufferedReader.lines().collect(Collectors.toList());
+            List<String> lines = bufferedReader.lines().collect(Collectors.toList());
 
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).equals("")) continue;
-                String[] splits = list.get(i).split(":");
+            for (String line: lines) {
+                if ("".equals(line)) continue;
+                String[] splits = line.split(":");
                 String word = splits[0];
                 String meanings = splits[1].replaceFirst(" ", "");
                 dict.getDictionary().put(word, meanings);
@@ -77,9 +78,17 @@ public class DictionaryDAO {
      * Add meanings of the existing word
      */
     public void add(String word, String meanings) {
-        for (String key : dict.getDictionary().keySet()) {
-            if (key.equals(word) && !dict.getDictionary().get(key).equals(meanings)) {
-                dict.getDictionary().replace(word, dict.getDictionary().get(key) + "; " + meanings);
+        for (String key: dict.getDictionary().keySet()) {
+            if (key.equals(word)) {
+                String meaning = dict.getDictionary().get(key);
+
+                List<String> meaningList = Arrays.asList(meaning.split("; "));
+
+                if (meaningList.stream().anyMatch(str -> str.trim().equals(meanings))) {
+                    System.out.println("Error occurred!");
+                } else {
+                    dict.getDictionary().replace(word, dict.getDictionary().get(key) + "; " + meanings);
+                }
             }
         }
         if (!dict.getDictionary().containsKey(word)) {
