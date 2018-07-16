@@ -8,9 +8,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AppConfig {
-    private Dictionary dict;
-    private DictionaryDAO dao;
-    private InputUtil inputUtil;
 
     @Bean
     public Dictionary dictionary() {
