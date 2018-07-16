@@ -10,9 +10,7 @@ import java.util.Scanner;
 public class InputUtil {
 
     @Autowired
-    private static DictionaryDAO dao;
-    private static String line;
-    private static String[] lines;
+    private DictionaryDAO dao;
 
     public InputUtil() {
     }
@@ -25,59 +23,44 @@ public class InputUtil {
         this.dao = dao;
     }
 
-    public String getLine() {
-        return line;
-    }
-
-    public void setLine(String line) {
-        this.line = line;
-    }
-
-    public String[] getLines() {
-        return lines;
-    }
-
-    public void setLines(String[] lines) {
-        this.lines = lines;
-    }
-
-static {
-    Scanner sc = new Scanner(System.in);
+    public void run() {
+        String line;
+        String[] lines;
+        Scanner sc = new Scanner(System.in);
 
         dao.getDictionaryFromFile();
         dao.instruct();
-        do
-    {
-        System.out.print("> ");
-        line = sc.nextLine();
-        lines = line.split(" ", 3);
+        do {
+            System.out.print("> ");
+            line = sc.nextLine();
+            lines = line.split(" ", 3);
 
-        switch (lines[0]) {
-            case "save": {
-                dao.save();
-                break;
+            switch (lines[0]) {
+                case "save": {
+                    dao.save();
+                    break;
+                }
+                case "add": {
+                    String lines1 = lines[1].substring(0, lines[1].length() - 1);
+                    dao.add(lines1, lines[2]);
+                    break;
+                }
+                case "lookup": {
+                    dao.lookup(lines[1]);
+                    break;
+                }
+                case "delete": {
+                    dao.delete(lines[1]);
+                    break;
+                }
+                case "quit": {
+                    break;
+                }
+                default:
+                    System.out.println("Wrong input!");
             }
-            case "add": {
-                String lines1 = lines[1].substring(0, lines[1].length() - 1);
-                dao.add(lines1, lines[2]);
-                break;
-            }
-            case "lookup": {
-                dao.lookup(lines[1]);
-                break;
-            }
-            case "delete": {
-                dao.delete(lines[1]);
-                break;
-            }
-            case "quit": {
-                break;
-            }
-            default:
-                System.out.println("Wrong input!");
-        }
 
-    } while(lines[0].equals("quit") ==false);
+        } while (!lines[0].equals("quit"));
         sc.close();
- }
+    }
 }
