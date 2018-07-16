@@ -30,14 +30,13 @@ public class DictionaryDAO {
         this.dict = dict;
     }
 
-    File file = new File("src/DICT.DAT");
+    File file = new File("DICT.DAT");
 
     /**
      * Get the Dictionary from .dat file
      */
     public void getDictionaryFromFile() {
         try {
-            File file = new File("DICT.DAT");
             BufferedReader bufferedReader = new BufferedReader
                     (new InputStreamReader(new FileInputStream(file)));
 
@@ -79,7 +78,7 @@ public class DictionaryDAO {
      */
     public void add(String word, String meanings) {
         for (String key : dict.getDictionary().keySet()) {
-            if (key.equals(word)&& !dict.getDictionary().get(key).equals(meanings)) {
+            if (key.equals(word) && !dict.getDictionary().get(key).equals(meanings)) {
                 dict.getDictionary().replace(word, dict.getDictionary().get(key) + "; " + meanings);
             }
         }
