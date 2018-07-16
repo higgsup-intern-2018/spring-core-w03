@@ -1,21 +1,33 @@
-package com.higgsup.intern.spring.demo.pojo;
+package com.higgsup.intern.spring.demo.pojo.dao;
+
+import com.higgsup.intern.spring.demo.pojo.model.Dictionary;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-public class Dictionary {
+@Component
+public class DictionaryDAO {
 
-    private Map<String, String> dictionary = new TreeMap<>();
+    @Autowired
+    private Dictionary dict;
 
-    public Map<String, String> getDictionary() {
-        return dictionary;
+    public DictionaryDAO() {
+
     }
 
-    public void setDictionary(Map<String, String> dictionary) {
-        this.dictionary = dictionary;
+    public Dictionary getDict() {
+        return dict;
+    }
+
+    public void setDict(Dictionary dict) {
+        this.dict = dict;
+    }
+
+    public DictionaryDAO(Dictionary dict) {
+        this.dict = dict;
     }
 
     File file = new File("DICT.DAT");
@@ -36,7 +48,7 @@ public class Dictionary {
                 String[] splits = list.get(i).split(":");
                 String word = splits[0];
                 String meanings = splits[1].replaceFirst(" ", "");
-                dictionary.put(word, meanings);
+                dict.getDictionary().put(word, meanings);
             }
             bufferedReader.close();
         } catch (FileNotFoundException e) {
@@ -52,8 +64,8 @@ public class Dictionary {
     public void save() {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file))) {
 
-            for (String key : dictionary.keySet()) {
-                bufferedWriter.write(key + ": " + dictionary.get(key));
+            for (String key : dict.getDictionary().keySet()) {
+                bufferedWriter.write(key + ": " + dict.getDictionary().get(key));
                 bufferedWriter.newLine();
             }
         } catch (IOException e) {
@@ -66,13 +78,13 @@ public class Dictionary {
      * Add meanings of the existing word
      */
     public void add(String word, String meanings) {
-        for (String key : dictionary.keySet()) {
-            if (key.equals(word)&& !dictionary.get(key).equals(meanings)) {
-                dictionary.replace(word, dictionary.get(key) + "; " + meanings);
+        for (String key : dict.getDictionary().keySet()) {
+            if (key.equals(word)&& !dict.getDictionary().get(key).equals(meanings)) {
+                dict.getDictionary().replace(word, dict.getDictionary().get(key) + "; " + meanings);
             }
         }
-        if (!dictionary.containsKey(word)) {
-            dictionary.put(word, meanings);
+        if (!dict.getDictionary().containsKey(word)) {
+            dict.getDictionary().put(word, meanings);
         }
     }
 
@@ -80,8 +92,8 @@ public class Dictionary {
      * Look up a word in the dictionary
      */
     public void lookup(String word) {
-        if (dictionary.containsKey(word)) {
-            System.out.println(dictionary.get(word));
+        if (dict.getDictionary().containsKey(word)) {
+            System.out.println(dict.getDictionary().get(word));
         } else {
             System.out.println("Not found.");
         }
@@ -91,8 +103,8 @@ public class Dictionary {
      * Delete a word in the dictionary
      */
     public void delete(String word) {
-        if (dictionary.containsKey(word)) {
-            dictionary.remove(word);
+        if (dict.getDictionary().containsKey(word)) {
+            dict.getDictionary().remove(word);
             System.out.println(word + " deleted.");
         } else {
             System.out.println("Not found.");
