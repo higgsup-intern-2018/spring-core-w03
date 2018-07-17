@@ -2,4 +2,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="functionality" class="com.higgsup.intern.spring.demo.pojo.Functionality"/>
+    <bean id="dictionary" class="com.higgsup.intern.spring.demo.pojo.Dictionary">
+        <constructor-arg ref="functionality"/>
+    </bean>
 </beans>
