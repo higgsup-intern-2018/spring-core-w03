@@ -1,4 +1,4 @@
-package com.higgsup.intern.spring.demo.xmlconf;
+package com.higgsup.intern.spring.demo.javaconf;
 
 import com.higgsup.intern.spring.demo.pojo.Dictionary;
 import com.higgsup.intern.spring.demo.pojo.ManagerDictionary;
